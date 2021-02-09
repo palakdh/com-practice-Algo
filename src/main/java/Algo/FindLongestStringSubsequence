@@ -1,0 +1,34 @@
+package Algo;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class FindLongestStringSubsequence{
+
+  public static String longestStringSubsequenceFromDictionary(List<String> dic, String searchStr ){
+    String output = "Not Found....";
+    dic.sort((str1,str2) -> str2.length() - str1.length());
+    for(String word: dic){
+      if(checkForSubsequence(word, searchStr)){
+        output = word;
+        break;
+      }
+    }
+  return output;
+  }
+  
+  private static Boolean checkForSubsequence(String word, String searchStr){
+    int j=0;
+    for(int i=0;i<searchStr.length();i++){
+      if(j<word.length() && word.charAt(j) == searchStr.charAt(i))
+        j++;
+    }
+    return j == word.length()? true:false;  
+  }
+  
+  public static void main(String[] args){
+    List<String> dic = Arrays.asList("ale","apple","bale","kangaroo");
+    String searchStr = "abcppplle";
+    System.out.println(longestStringSubsequenceFromDictionary(dic,searchStr));
+  }
+}
