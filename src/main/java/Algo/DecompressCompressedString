@@ -1,0 +1,94 @@
+package Algo;
+
+import java.util.Scanner;
+
+public class DecompressCompressedString {
+
+  private static String coreStr = "";
+  private static String decompressedStr = "";
+  
+  private static String decompress(String compressedStr){
+    if(compressedStr == null || compressedStr.length() ==0 || compressedStr.charAt(0)=='0' || Character.isLetter(compressedStr.charAt(0)))
+      return "Please enter valid compressed String(i.e. 3[ab]c, 2[3[ab]c])";
+    
+      decompress(compressedStr, 0, "",0, compressedStr.length()-1 );
+      
+      if(decompressedStr.length() != 0)
+        return decompressedStr;
+        
+      return "decompression fails, try again.";    
+   }
+   
+   private static void decompress( String cString, int repetition,String outerStr, int start, int end){
+    if(Character.isLetter(cString.charAt(start)))
+      return;
+      
+    boolean digitValidation = false;
+    int i =start;
+    while(!digitValidation && i<=end){
+      if(cString.charAt(i) == '['){
+        repetition = Integer.parseInt(cString.substring(start,i));
+        start = i+1;
+        digitValidation = true;
+       }
+       i++;
+      }
+      
+      boolean oStringValidation = false;
+      int j = end;
+      if(cString.charAt(end) == ']'){
+          outerStr = "";
+          end--;
+       }else{
+       while(!oStringValidation){
+        if(cString.charAt(j) == ']'){
+          outerStr = cString.substring(j+1,end+1);
+          end = j-1;
+          oStringValidation = true;
+        }
+        j--;
+       }
+       
+       int k = start-1;
+       int coreStrIndex =0;
+       int compressedSkin = 0;
+       while(compressedSkin<2){
+        if(cString.charAt(k) =='['){
+          coreStrIndex = k+1;
+          compressedSkin++;
+         }
+         if(cString.charAt(k) ==']'){
+            coreStr = cString.substring(coreStrIndex,k);
+            break;
+         }
+          k++;
+        }
+        
+        decompress(cString, repetition, outerStr, start,end);
+        
+        decompressString(repetition, outerStr, coreStr);
+       }
+      
+   }
+   
+   private static void decompressString(int repetition, String outerStr, String innerStr){
+      String combinedStr="";
+      for(int i =0;i<repetition;i++){
+        combinedStr = combinedStr + innerStr;
+      }
+      combinedStr = combinedStr + outerStr;
+      coreStr = combinedStr;
+      decompressedStr = combinedStr;     
+   
+   }
+   
+     
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		String inputCompressedStr = sc.next();
+		String decompressStr = decompress(inputCompressedStr);
+		System.out.println(decompressStr);
+	}
+
+}
